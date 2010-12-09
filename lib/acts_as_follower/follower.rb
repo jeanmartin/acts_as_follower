@@ -47,8 +47,8 @@ module ActsAsFollower #:nodoc:
       end
 
       # Returns the follow records related to this instance with the followable included.
-      def all_follows(options={})
-        self.follows.unblocked.includes(:followable).all(options)
+      def all_follows
+        follows.unblocked.includes(:followable)
       end
 
       # Returns the actual records which this instance is following.
@@ -60,7 +60,7 @@ module ActsAsFollower #:nodoc:
       def following_by_type(followable_type, options={})
         follows = followable_type.constantize.
           includes(:followings).
-          where('blocked = ?', false).
+          where(:blocked => false).
           where(
             "follows.follower_id = ? AND follows.follower_type = ? AND follows.followable_type = ?", 
             self.id, parent_class_name(self), followable_type
