@@ -60,7 +60,7 @@ module ActsAsFollower #:nodoc:
       def following_by_type(followable_type, options={})
         follows = followable_type.constantize.
           includes(:followings).
-          where(:blocked => false).
+          where('follows.blocked = ?', false).
           where(
             "follows.follower_id = ? AND follows.follower_type = ? AND follows.followable_type = ?", 
             self.id, parent_class_name(self), followable_type
